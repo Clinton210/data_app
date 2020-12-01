@@ -13,19 +13,17 @@ def main():
     # Create df
     df = pd.DataFrame()
 
-    
     st.title("Python data vizulatization app")
 
     menu = ["Home", "About"]
     menu_choice = st.sidebar.selectbox("Menu", menu)
 
-    if  menu_choice == "Home": 
+    if menu_choice == "Home":
         home_main()
 
-    if  menu_choice == "About":
+    if menu_choice == "About":
         about_main()
 
-    
 
 if __name__ == "__main__":
     main()
