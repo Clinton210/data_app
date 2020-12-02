@@ -1,7 +1,7 @@
 import streamlit as st
 
-
 def about_main():
+    """function to display about information"""
     st.subheader("This open source app is written in Python with Streamlit.")
     st.subheader("")
     with st.beta_expander("Source Files"):

@@ -1,16 +1,23 @@
 import streamlit as st
 import pandas as pd
+import xlrd
 
 
 def load_data_file():
-    df = pd.DataFrame()
-    data_file = st.file_uploader("Upload CSV", type=["csv"])
-    if data_file:
-        df = pd.read_csv(data_file)
+    """Method to load either an excel or csv file
+    and return the dataframe"""
+    df = pd.DataFrame() # create an empty df to return if none loaded
+    data_file = st.file_uploader("Upload CSV", type=["csv", "xlsx"])
+    if data_file: # Check if a data file has been uploaded
+        # If so, then check to see if it is a csv or xlsx
+        # then choose corresponding pandas data reader
+        if data_file.name.endswith('csv'): 
+            df = pd.read_csv(data_file)
+        else:
+            df = pd.read_excel(data_file)
         st.dataframe(df)
 
     return df
-
 
 def home_main():
     modified_df = pd.DataFrame()
