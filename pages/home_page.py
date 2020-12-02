@@ -21,7 +21,8 @@ def load_data_file():
     return df
 
 
-def home_main(graph_type_chosen, title_loc, group_var):
+def home_main(graph_type_chosen, title_loc):
+    axis_type = ["Unkown", "Quantitative", "Ordinal", "Temporal", "Geojson"]
 
     with st.beta_expander("Instructions"):
 
@@ -35,28 +36,39 @@ def home_main(graph_type_chosen, title_loc, group_var):
 
     with st.beta_expander("File Uploader"):
         df = load_data_file() 
-        mod_df = pd.DataFrame()
         # create list of columns from df so that user can select columns
-        columns = df.columns 
-        group_var_selected = None
+        columns = list(df.columns)
 
     if not df.empty:
-        col_num = 0
         if graph_type_chosen != "None":
-            with st.beta_expander("Columns"):
+            c1, c2, c3 = st.beta_columns(3)
+            with c1:
                 x_axis = st.selectbox(
                     "X Axis", columns
                 )
-                mod_df.insert(col_num, x_axis, df[x_axis])
                 # Remove x axis column selected from column list
-                columns = columns.drop([x_axis])
+                columns.remove(x_axis)
+                x_axis_type = st.selectbox("X axis type", axis_type)
+
+            with c2:
                 y_axis = st.selectbox(
                     "Y Axis", columns
                 )
-                columns = columns.drop([y_axis])
                 # Remove y axis column selected from column list
-                if group_var == "Yes":
-                   group_var_selected = st.selectbox("Grouping Variable", columns)     
+                columns.remove(y_axis)
+                y_axis_type = st.selectbox("Y axis type", axis_type)
+
+            with c3:
+                # Add a None option to the column list since grouping varaible is optional
+                columns.insert(0, "None")
+                group_var = st.selectbox(
+                    "Grouping Variable (optional)", columns
+                )
+                # Remove group_var column selected from column list
+                columns = columns.remove(group_var)
+                # Add a None option to the axis type list since grouping varaible is optional
+                axis_type.insert(0, "N/A")
+                y_axis_type = st.selectbox("Y axis type", axis_type)
                 
             if st.button("Generate Graph"):
                 """ Depending on type of chart, change the setting of 
@@ -67,7 +79,6 @@ def home_main(graph_type_chosen, title_loc, group_var):
                     c = alt.Chart(df).mark_bar().encode(
                         x = x_axis, 
                         y = y_axis,
-                        #color = group_var_selected
                     ).properties(
                         title = title_loc
                     )
@@ -75,7 +86,6 @@ def home_main(graph_type_chosen, title_loc, group_var):
                     c = alt.Chart(df).mark_line().encode(
                         x = x_axis, 
                         y = y_axis,
-                        #color = group_var_selected
                     ).properties(
                         title = title_loc
                     )
@@ -83,7 +93,6 @@ def home_main(graph_type_chosen, title_loc, group_var):
                     c = alt.Chart(df).mark_circle().encode(
                         x = x_axis, 
                         y = y_axis,
-                        #color = group_var_selected
                     ).properties(
                         title = title_loc
                     )
