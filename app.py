@@ -19,10 +19,10 @@ def main():
     menu = ["Home", "About"]
     menu_choice = st.sidebar.selectbox("Menu", menu)
 
-    graph_type_chosen, title, title_settings, tooltips, x_axis_setings, y_axis_settings, interactive = create_sidebar()
+    graph_type_chosen, title, title_settings, tooltips, x_axis_setings, y_axis_settings, interactive, remove_grid, size_settings = create_sidebar()
 
     if menu_choice == "Home":
-        home_main(graph_type_chosen, title, title_settings, tooltips, x_axis_setings, y_axis_settings, interactive)
+        home_main(graph_type_chosen, title, title_settings, tooltips, x_axis_setings, y_axis_settings, interactive, remove_grid, size_settings)
 
     if menu_choice == "About":
         about_main()

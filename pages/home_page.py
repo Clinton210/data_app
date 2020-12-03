@@ -5,7 +5,7 @@ import xlrd
 from pages.home_page_helper_fxs import load_data_file, update_graph_type, add_graph_encodings
 
 
-def home_main(graph_type_chosen, title, title_settings, tooltips, x_axis_settings, y_axis_settings, interactive):
+def home_main(graph_type_chosen, title, title_settings, tooltips, x_axis_settings, y_axis_settings, interactive, remove_grid, size_settings):
     axis_type = ["Undefined", "Quantitative", "Ordinal", "Temporal", "Geojson"]
     agg_type = ["None", "Average", "Median", "Sum"]
     y_axis_agg = "Undefined" # Need to create and set to N/A in case user doesn't get the option to select y axis agg type
@@ -108,10 +108,14 @@ def home_main(graph_type_chosen, title, title_settings, tooltips, x_axis_setting
                 c = c.configure_axisY(**y_axis_settings)
             if interactive:
                 c = c.interactive()
-                
+            if remove_grid:
+                c = c.configure_axis(grid = False)
+            if size_settings:
+                c = c.properties(**size_settings)
+
             # Create Graph
             try:
-                st.altair_chart(c, use_container_width = True)
+                st.altair_chart(c)
             except Exception as e:
                 st.error(e)
 

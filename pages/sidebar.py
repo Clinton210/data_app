@@ -11,15 +11,32 @@ def create_sidebar():
 
     # Customize title settings
     title_settings = {}
+    adjust_size = st.sidebar.checkbox("Adjust Chart Size")
     custom_title_settings = st.sidebar.checkbox("Customize Title")
     custom_x_axis = st.sidebar.checkbox("Customize X Axis")
     custom_y_axis = st.sidebar.checkbox("Customize Y Axis")
-    tooltips = st.sidebar.checkbox("Use Tooltips")
+    tooltips = st.sidebar.checkbox("Add Tooltips")
     interactive = st.sidebar.checkbox("Add Interactivity (Zoom and Drag)")
+    remove_grid = st.sidebar.checkbox("Remove Grid Lines")
     
+    # Customize size settings
+    size_settings = {}
+    if adjust_size:
+        with st.sidebar.beta_expander("Size Settings"):
+            # Customize height and add value to size setting
+            height = st.slider(
+                "Height", min_value = 100, max_value = 1000, value = 150, step = 20
+            )
+            size_settings['height'] = height
+
+            # Customize height and add value to size settings
+            width = st.slider(
+                "Width", min_value = 100, max_value = 1000, value = 150, step = 20
+            )
+            size_settings['width'] = width
+
     if custom_title_settings:
         with st.sidebar.beta_expander("Title Settings"):
-
             # Customize font size and add value to title settings
             title_font_size = st.slider(
                 "Font Size", min_value = 10, max_value = 60, value = 10, step = 1
@@ -37,18 +54,17 @@ def create_sidebar():
     x_axis_settings = {}
     if custom_x_axis :
         with st.sidebar.beta_expander("X Axis Settings"):
-
             # Customize font size and add value to title settings
             x_axis_font_size = st.slider(
-                "X Axis Font Size", min_value = 8, max_value = 40, value = 10, step = 1
+                "X Axis Title Font Size", min_value = 8, max_value = 40, value = 10, step = 1
             )
             x_axis_settings['titleFontSize'] = x_axis_font_size
 
             # Customize color and add add value to title settings
-            x_axis_color = st.color_picker("X Axis Color")
+            x_axis_color = st.color_picker("X Axis Title olor")
             x_axis_settings['titleColor'] = x_axis_color
 
-            x_axis_anchor = st.selectbox("X Axis Position", ["Start", "Middle", "End"], index = 1)
+            x_axis_anchor = st.selectbox("X Axis Title Position", ["Start", "Middle", "End"], index = 1)
             x_axis_settings['titleAnchor'] = x_axis_anchor.lower()
 
     # Customize y axis settings
@@ -59,17 +75,17 @@ def create_sidebar():
 
             # Customize font size and add value to title settings
             y_axis_font_size = st.slider(
-                "Y Axis Font Size", min_value = 8, max_value = 40, value = 10, step = 1
+                "Y Axis Title Font Size", min_value = 8, max_value = 40, value = 10, step = 1
             )
             y_axis_settings['titleFontSize'] = y_axis_font_size
 
             # Customize color and add add value to title settings
-            y_axis_color = st.color_picker("Y Axis Color")
+            y_axis_color = st.color_picker("Y Axis Title Color")
             y_axis_settings['titleColor'] = y_axis_color
 
-            y_axis_anchor = st.selectbox("Y Axis Position", ["Start", "Middle", "End"], index = 1)
+            y_axis_anchor = st.selectbox("Y Axis Title Position", ["Start", "Middle", "End"], index = 1)
             y_axis_settings['titleAnchor'] = y_axis_anchor.lower()
 
  
 
-    return graph_type_chosen, title, title_settings, tooltips, x_axis_settings, y_axis_settings, interactive
+    return graph_type_chosen, title, title_settings, tooltips, x_axis_settings, y_axis_settings, interactive, remove_grid, size_settings
