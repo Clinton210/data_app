@@ -15,7 +15,7 @@ def create_sidebar():
     custom_x_axis = st.sidebar.checkbox("Customize X Axis")
     custom_y_axis = st.sidebar.checkbox("Customize Y Axis")
     tooltips = st.sidebar.checkbox("Use Tooltips")
-    interactive = st.sidebar.checkbox("Add Interactivity (Zoom and Drag")
+    interactive = st.sidebar.checkbox("Add Interactivity (Zoom and Drag)")
     
     if custom_title_settings:
         with st.sidebar.beta_expander("Title Settings"):
