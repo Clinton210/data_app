@@ -11,17 +11,18 @@ import pandas as pd
 
 def main():
     """ Main programm"""
-    # Create df
+    # Create dfs
     df = pd.DataFrame()
 
     st.title("Python data vizulatization app")
 
     menu = ["Home", "About"]
     menu_choice = st.sidebar.selectbox("Menu", menu)
-    graph_type_chosen, title = create_sidebar()
+
+    graph_type_chosen, title, title_settings, tooltips, x_axis_setings, y_axis_settings, interactive = create_sidebar()
 
     if menu_choice == "Home":
-        home_main(graph_type_chosen, title)
+        home_main(graph_type_chosen, title, title_settings, tooltips, x_axis_setings, y_axis_settings, interactive)
 
     if menu_choice == "About":
         about_main()
