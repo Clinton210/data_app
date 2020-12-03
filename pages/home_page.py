@@ -27,14 +27,14 @@ def home_main(
     axis_type = ["Undefined", "Quantitative", "Ordinal", "Temporal", "Geojson"]
     agg_type = ["None", "Average", "Median", "Sum"]
 
-    with st.beta_expander("Instructions"):
-        st.markdown(
-            """
-        1. Load a dataset (csv or excel file) using the file uploader below
-        2. Expand the options section to choose graph type and columns
-        3. Once options are selected, click the generate graph button
-        """
-        )
+    #with st.beta_expander("Instructions"):
+    #    st.markdown(
+    #        """
+    #    1. Load a dataset (csv or excel file) using the file uploader below
+    #    2. Expand the options section to choose graph type and columns
+    #    3. Once options are selected, click the generate graph button
+    #    """
+    #    )
 
     with st.beta_expander("File Uploader"):
 
@@ -42,9 +42,11 @@ def home_main(
         # create list of columns from df so that user can select columns
         columns = list(df.columns)
 
-    if not df.empty:
+    if df.empty:
+        st.info("Use the file uploader to import a csv or excel data file to get started.")
+    else:
         if graph_type_chosen == "None":
-            st.info("Please select a graph type in the left menu")
+            st.info("Please select a graph type in the options menu to the left")
         else:
             c1, c2, c3 = st.beta_columns(3)
             with c1:
@@ -96,6 +98,9 @@ def home_main(
 
             # Create Graph
             try:
-                st.altair_chart(c)
+                if size_settings:
+                    st.altair_chart(c)
+                else:
+                    st.altair_chart(c, use_container_width = True)
             except Exception as e:
                 st.error(e)

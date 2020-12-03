@@ -3,11 +3,12 @@ import streamlit as st
 
 def create_sidebar():
     """Function to create sidebar options besides the nav menu"""
-
+    
     graph_types = ["None", "Bar Chart", "Line Chart", "Scatter Chart"]
     graph_type_chosen = st.sidebar.selectbox("Graph Type", graph_types)
 
     title = st.sidebar.text_input("Chart Title", "None", max_chars=50)
+
 
     # Customize setting checkboxes which will either change the setting or open up expanders to choose more options
     adjust_size = st.sidebar.checkbox("Adjust Chart Size")
@@ -17,6 +18,9 @@ def create_sidebar():
     tooltips = st.sidebar.checkbox("Add Tooltips")
     interactive = st.sidebar.checkbox("Add Interactivity (Zoom and Drag)")
     remove_grid = st.sidebar.checkbox("Remove Grid Lines")
+
+    # Add space to seperate the section above and below on the sidebar
+    st.sidebar.markdown("\n")
 
     # Customize size settings. Initialize empty settings dict first
     size_settings = {}
@@ -84,6 +88,7 @@ def display_title_settings(title_settings):
     title_settings["color"] = title_color
     title_anchor = st.selectbox("Title Position", ["Start", "Middle", "End"], index=1)
     title_settings["anchor"] = title_anchor.lower()
+    
     return title_settings
 
 

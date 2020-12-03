@@ -11,11 +11,16 @@ import pandas as pd
 
 def main():
     """ Main programm"""
+    st.set_page_config(
+        page_title = "Data Visualization App",
+        page_icon = None,
+        layout = "centered",
+        initial_sidebar_state = "expanded"
+    )
+
     # Create dfs
-    df = pd.DataFrame()
-
-    st.title("Python data vizulatization app")
-
+    st.title("Data Visualization App")
+    
     menu = ["Home", "About"]
     menu_choice = st.sidebar.selectbox("Menu", menu)
 
