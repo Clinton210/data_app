@@ -1,13 +1,16 @@
 # Core Pkgs
 import streamlit as st
+import streamlit.components.v1 as stc
 
 from pages.home_page import home_main
 from pages.about_page import about_main
 from pages.sidebar import create_sidebar
 
-# Data Pkgs
-import pandas as pd
-
+HTML_BANNER = """
+    <div style="background-color:whitesmoke;padding:10px;border-radius:10px">
+    <h1 style="color:black;text-align:center;">Data Visualization App </h1>
+    </div>
+    """
 
 def main():
     """ Main programm"""
@@ -19,7 +22,7 @@ def main():
     )
 
     # Create dfs
-    st.title("Data Visualization App")
+    stc.html(HTML_BANNER)
     
     menu = ["Home", "About"]
     menu_choice = st.sidebar.selectbox("Menu", menu)

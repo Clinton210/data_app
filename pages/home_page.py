@@ -1,9 +1,8 @@
 import streamlit as st
-import pandas as pd
 import altair as alt
-import xlrd
+
 from pages.home_page_helper_fxs import (
-    load_data_file,
+    convert_to_df,
     update_graph_type,
     add_graph_encodings,
     add_x_column,
@@ -37,8 +36,11 @@ def home_main(
     #    )
 
     with st.beta_expander("File Uploader"):
-
-        df = load_data_file()
+        
+        data_file = st.file_uploader("Upload CSV or Excel Data Files", type=["csv", "xlsx"])
+        df = convert_to_df(data_file)
+        if not df.empty:
+            st.dataframe(df)
         # create list of columns from df so that user can select columns
         columns = list(df.columns)
 

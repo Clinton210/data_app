@@ -3,11 +3,16 @@ import pandas as pd
 import altair as alt
 
 # Helper Functions for the home page
-def load_data_file():
+
+# Need to move the file uploader out of the function below.
+# Caching will not work with the file uploader
+
+
+
+@st.cache
+def convert_to_df(data_file):
     """Method to load either an excel or csv file
     and return the dataframe"""
-    df = pd.DataFrame()  # create an empty df to return if none loaded
-    data_file = st.file_uploader("Upload CSV", type=["csv", "xlsx"])
     if data_file:  
         """ Check if a data file has been uploaded
         If so, then check to see if it is a csv or xlsx
@@ -16,8 +21,8 @@ def load_data_file():
             df = pd.read_csv(data_file)
         else:
             df = pd.read_excel(data_file)
-        st.dataframe(df)
-
+    else:
+        df = pd.DataFrame()
     return df
 
 # Following three funcitons update the x, y, and group variable columns in the home page

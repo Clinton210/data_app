@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as stc
 
 
 def create_sidebar():
@@ -19,8 +20,6 @@ def create_sidebar():
     interactive = st.sidebar.checkbox("Add Interactivity (Zoom and Drag)")
     remove_grid = st.sidebar.checkbox("Remove Grid Lines")
 
-    # Add space to seperate the section above and below on the sidebar
-    st.sidebar.markdown("\n")
 
     # Customize size settings. Initialize empty settings dict first
     size_settings = {}
