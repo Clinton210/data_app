@@ -9,21 +9,7 @@ import altair as alt
 
 
 
-@st.cache
-def convert_to_df(data_file):
-    """Method to load either an excel or csv file
-    and return the dataframe"""
-    if data_file:  
-        """ Check if a data file has been uploaded
-        If so, then check to see if it is a csv or xlsx
-        then choose corresponding pandas data reader"""
-        if data_file.name.endswith("csv"):
-            df = pd.read_csv(data_file)
-        else:
-            df = pd.read_excel(data_file)
-    else:
-        df = pd.DataFrame()
-    return df
+
 
 # Following three funcitons update the x, y, and group variable columns in the home page
 def add_x_column(columns, axis_type, agg_type):

@@ -1,8 +1,9 @@
+
 import streamlit as st
 import altair as alt
 
-from pages.home_page_helper_fxs import (
-    convert_to_df,
+
+from pages.multi_variable_graphs.mvg_helper_fxs import (
     update_graph_type,
     add_graph_encodings,
     add_x_column,
@@ -10,43 +11,30 @@ from pages.home_page_helper_fxs import (
     add_group_var_column
 )
 
+from pages.multi_variable_graphs.mvg_sidebar import create_sidebar
 
-def home_main(
-    graph_type_chosen,
-    title,
-    title_settings,
-    tooltips,
-    x_axis_settings,
-    y_axis_settings,
-    interactive,
-    remove_grid,
-    size_settings,
-):
-    
+
+def multi_variable_graphs_main(df):
+    (
+        graph_type_chosen,
+        title,
+        title_settings,
+        tooltips,
+        x_axis_setings,
+        y_axis_settings,
+        interactive,
+        remove_grid,
+        size_settings
+    ) = create_sidebar()
+
+
     axis_type = ["Undefined", "Quantitative", "Ordinal", "Temporal", "Geojson"]
     agg_type = ["None", "Average", "Median", "Sum"]
-
-    #with st.beta_expander("Instructions"):
-    #    st.markdown(
-    #        """
-    #    1. Load a dataset (csv or excel file) using the file uploader below
-    #    2. Expand the options section to choose graph type and columns
-    #    3. Once options are selected, click the generate graph button
-    #    """
-    #    )
-
-    with st.beta_expander("File Uploader"):
-        
-        data_file = st.file_uploader("Upload CSV or Excel Data Files", type=["csv", "xlsx"])
-        df = convert_to_df(data_file)
-        if not df.empty:
-            st.dataframe(df)
-        # create list of columns from df so that user can select columns
-        columns = list(df.columns)
 
     if df.empty:
         st.info("Use the file uploader to import a csv or excel data file to get started.")
     else:
+        columns = list(df.columns)
         if graph_type_chosen == "None":
             st.info("Please select a graph type in the options menu to the left")
         else:

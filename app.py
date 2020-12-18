@@ -1,10 +1,11 @@
 # Core Pkgs
 import streamlit as st
 import streamlit.components.v1 as stc
+import pandas as pd
 
-from pages.home_page import home_main
 from pages.about_page import about_main
-from pages.sidebar import create_sidebar
+
+from pages.multi_variable_graphs.multi_variable_graphs import multi_variable_graphs_main
 
 HTML_BANNER = """
     <div style="background-color:whitesmoke;padding:10px;border-radius:10px">
@@ -12,49 +13,66 @@ HTML_BANNER = """
     </div>
     """
 
-def main():
-    """ Main programm"""
-    st.set_page_config(
-        page_title = "Data Visualization App",
-        page_icon = None,
-        layout = "centered",
-        initial_sidebar_state = "expanded"
-    )
+class MainApp():
 
-    # Create dfs
-    stc.html(HTML_BANNER)
+    # Create class dataframe that can be shared among all modules
     
-    menu = ["Home", "About"]
-    menu_choice = st.sidebar.selectbox("Menu", menu)
+    
 
-    (
-        graph_type_chosen,
-        title,
-        title_settings,
-        tooltips,
-        x_axis_setings,
-        y_axis_settings,
-        interactive,
-        remove_grid,
-        size_settings,
-    ) = create_sidebar()
-
-    if menu_choice == "Home":
-        home_main(
-            graph_type_chosen,
-            title,
-            title_settings,
-            tooltips,
-            x_axis_setings,
-            y_axis_settings,
-            interactive,
-            remove_grid,
-            size_settings,
+    def __init__(self):
+        """ Main programm"""
+        st.set_page_config(
+            page_title = "Data Visualization App",
+            page_icon = None,
+            layout = "centered",
+            initial_sidebar_state = "expanded"
         )
 
-    if menu_choice == "About":
-        about_main()
+        stc.html(HTML_BANNER)
 
+        with st.beta_expander("File Uploader"):
+            
+            data_file = st.file_uploader("Upload CSV or Excel Data Files", type=["csv", "xlsx"])
+            self.df = self.convert_to_df(data_file)
+            if not self.df.empty:
+                st.dataframe(self.df)
+            else:
+                st.info("Use the file uploader to import a csv or excel data file to get started.")
+                self.df = pd.DataFrame()
+
+        
+        
+        menu = ["Home", "Multi-Variable Graphs", "About"]
+        menu_choice = st.sidebar.selectbox("Menu", menu)
+
+
+    
+        if menu_choice == "Multi-Variable Graphs":
+            multi_variable_graphs_main(self.df) 
+
+        if menu_choice == "About":
+            about_main()
+
+
+    @st.cache
+    def convert_to_df(self, data_file):
+        """Method to load either an excel or csv file
+        and return the dataframe"""
+        if data_file:  
+            """ Check if a data file has been uploaded
+            If so, then check to see if it is a csv or xlsx
+            then choose corresponding pandas data reader"""
+            if data_file.name.endswith("csv"):
+                df = pd.read_csv(data_file)
+            else:
+                df = pd.read_excel(data_file)
+        else:
+            df = pd.DataFrame()
+        return df
 
 if __name__ == "__main__":
-    main()
+    app = MainApp()
+
+
+
+
