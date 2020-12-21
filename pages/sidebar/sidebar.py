@@ -2,12 +2,12 @@ import streamlit as st
 import streamlit.components.v1 as stc
 
 
-class customSidebar():
+class customSidebar:
     """class to create sidebar options other than the nav menu
-    Pass in the setting to display to the constructor as args along with 
+    Pass in the setting to display to the constructor as args along with
     the graph types as a keyword. Can access invidual attributes thrrough the class
     as well as dictionaries that save various values that align with Altair's settings.
-    
+
     adjust_size: height, width
     title_settings: fontSize, color, anchor
     x_axis_settings: titleFontSize, titleColor, titleAnchor
@@ -16,10 +16,10 @@ class customSidebar():
     """
 
     def __init__(self, *args, **kwargs):
-        """ 
+        """
         Send in the options to include in the sidebar as string args.
         Send in the graph types as a keyword arg 'graph_types' with the graphs that the user can select
-        
+
         Options available:
         adjust_size
         custom_title
@@ -44,24 +44,32 @@ class customSidebar():
         self.y_axis_title_settings = {}
         self.y_axis_settings = {}
 
-
         # create a selectbox of different graph types passed into the constructor
         # graph_types = ["None", "Bar Chart", "Line Chart", "Scatter Chart"]
-        self.graph_type_chosen = st.sidebar.selectbox("Graph Type", kwargs['graph_types'])
+        self.graph_type_chosen = st.sidebar.selectbox(
+            "Graph Type", kwargs["graph_types"]
+        )
 
-        
-        # Customize setting checkboxes which will either change the setting or open up expanders to choose more options     
-        self.tooltips = st.sidebar.checkbox("Add Tooltips") if 'tooltips' in args else None
-        self.interactive = st.sidebar.checkbox("Add Interactivity (Zoom and Drag)") if 'interactive' in args else None
-        self.remove_grid = st.sidebar.checkbox("Remove Grid Lines") if 'remove_grid' in args else None
+        # Customize setting checkboxes which will either change the setting or open up expanders to choose more options
+        self.tooltips = (
+            st.sidebar.checkbox("Add Tooltips") if "tooltips" in args else None
+        )
+        self.interactive = (
+            st.sidebar.checkbox("Add Interactivity (Zoom and Drag)")
+            if "interactive" in args
+            else None
+        )
+        self.remove_grid = (
+            st.sidebar.checkbox("Remove Grid Lines") if "remove_grid" in args else None
+        )
 
-        if 'adjust_color' in args:
+        # Display default color and allow user to change
+        if "adjust_color" in args:
             # Display size settings, customize height and width. Then add values in size setting
             self.color_settings = self._display_color_settings(self.color_settings)
 
-
         # Customize size settings.
-        if 'adjust_size' in args:
+        if "adjust_size" in args:
             with st.sidebar.beta_expander("Size Settings"):
                 # Display size settings, customize height and width. Then add values in size setting
                 self.adjust_size = st.checkbox("Adjust Chart Size")
@@ -69,38 +77,69 @@ class customSidebar():
                     self.size_settings = self._display_size_settings(self.size_settings)
 
         # Customize title settings.
-        if 'custom_title' in args:
+        if "custom_title" in args:
             with st.sidebar.beta_expander("Title Settings"):
                 # Display title settings, customize title font size, color, and position. Then add values in title settings
                 self.title = st.text_input("Chart Title", "None", max_chars=50)
-                self.custom_title_settings = st.checkbox("Customize Title") if 'custom_title_settings' in args else None
+                self.custom_title_settings = (
+                    st.checkbox("Customize Title")
+                    if "custom_title_settings" in args
+                    else None
+                )
                 if self.custom_title_settings:
-                    self.title_settings = self._display_title_settings(self.title_settings)
+                    self.title_settings = self._display_title_settings(
+                        self.title_settings
+                    )
 
         # Customize x axis settings.
-        if 'custom_x_axis_title' in args or 'custom_x_axis' in args:
+        if "custom_x_axis_title" in args or "custom_x_axis" in args:
             with st.sidebar.beta_expander("X Axis Settings"):
-                self.custom_x_axis_title = st.checkbox("Customize X Axis Title") if 'custom_x_axis_title' in args else None
+                self.custom_x_axis_title = (
+                    st.checkbox("Customize X Axis Title")
+                    if "custom_x_axis_title" in args
+                    else None
+                )
                 # Display x axis settings, customize title font size, color, and position, Then add values in x_axis_settings dict
                 if self.custom_x_axis_title:
-                    self.x_axis_title, self.x_axis_title_settings = self._display_x_axis_title_settings(self.x_axis_settings) # Check if I need to pass in this variable
-                self.custom_x_axis = st.checkbox("Customize X Axis") if 'custom_x_axis' in args else None
+                    (
+                        self.x_axis_title,
+                        self.x_axis_title_settings,
+                    ) = self._display_x_axis_title_settings(
+                        self.x_axis_settings
+                    )  # Check if I need to pass in this variable
+                self.custom_x_axis = (
+                    st.checkbox("Customize X Axis") if "custom_x_axis" in args else None
+                )
                 if self.custom_x_axis:
-                    self.x_axis_settings = self._display_x_axis_settings(self.x_axis_settings) # Check if I need to pass in this variable
+                    self.x_axis_settings = self._display_x_axis_settings(
+                        self.x_axis_settings
+                    )  # Check if I need to pass in this variable
 
         # Customize y axis settings.
-        if 'custom_y_axis_title' in args or 'custom_y_axis' in args:
+        if "custom_y_axis_title" in args or "custom_y_axis" in args:
             with st.sidebar.beta_expander("Y Axis Settings"):
-                self.custom_y_axis_title = st.checkbox("Customize Y Axis Title") if 'custom_y_axis_title' in args else None
+                self.custom_y_axis_title = (
+                    st.checkbox("Customize Y Axis Title")
+                    if "custom_y_axis_title" in args
+                    else None
+                )
                 # Display x axis settings, customize title font size, color, and position, Then add values in x_axis_settings dict
                 if self.custom_y_axis_title:
-                    self.y_axis_title, self.y_axis_title_settings = self._display_y_axis_title_settings(self.y_axis_settings) # Check if I need to pass in this variable
-                self.custom_y_axis = st.checkbox("Customize Y Axis") if 'custom_y_axis' in args else None
+                    (
+                        self.y_axis_title,
+                        self.y_axis_title_settings,
+                    ) = self._display_y_axis_title_settings(
+                        self.y_axis_settings
+                    )  # Check if I need to pass in this variable
+                self.custom_y_axis = (
+                    st.checkbox("Customize Y Axis") if "custom_y_axis" in args else None
+                )
                 if self.custom_y_axis:
-                    self.y_axis_settings = self._display_y_axis_settings(self.y_axis_settings) # Check if I need to pass in this variable
-                    
+                    self.y_axis_settings = self._display_y_axis_settings(
+                        self.y_axis_settings
+                    )  # Check if I need to pass in this variable
 
-    # Methods 
+    # Methods
     # Do not cache this funciton unless you want an error.
     def _display_size_settings(self, size_settings):
         # Customize height and add value to size setting
@@ -112,15 +151,13 @@ class customSidebar():
         size_settings["width"] = width
 
         return size_settings
-        
 
     def _display_color_settings(self, color_settings):
         # Customize general chart color
         color_chosen = st.sidebar.color_picker("Chart Color", value="#4682b4")
-        color_settings['color'] = color_chosen
+        color_settings["color"] = color_chosen
 
         return color_settings
-
 
     # Do not cache this funciton unless you want an error.
     def _display_title_settings(self, title_settings):
@@ -133,9 +170,11 @@ class customSidebar():
         # Customize color and add add value to title settings
         title_color = st.color_picker("Title Color")
         title_settings["color"] = title_color
-        title_anchor = st.selectbox("Title Position", ["Start", "Middle", "End"], index=1)
+        title_anchor = st.selectbox(
+            "Title Position", ["Start", "Middle", "End"], index=1
+        )
         title_settings["anchor"] = title_anchor.lower()
-        
+
         return title_settings
 
     # Do not cache this funciton unless you want an error.
@@ -164,36 +203,40 @@ class customSidebar():
         # Checkbox to turn off labels and grid
         x_axis_labels_grids_off = st.checkbox("Hide X-Axis Labels and Grids")
         if x_axis_labels_grids_off:
-            x_axis_settings['grid'] = False
-            x_axis_settings['labels'] = False
-            x_axis_settings['ticks'] = False
-        
+            x_axis_settings["grid"] = False
+            x_axis_settings["labels"] = False
+            x_axis_settings["ticks"] = False
+
         # Customize x axis label color and add add value to x axis settings
         x_axis_label_color = st.color_picker("X Axis Label Color")
-        x_axis_settings['labelColor'] = x_axis_label_color
+        x_axis_settings["labelColor"] = x_axis_label_color
 
         # Customize x axis label color and add add value to y axis settings
         x_axis_label_font_size = st.slider(
             "X Axis Label Font Size", min_value=6, max_value=20, value=8, step=1
         )
-        x_axis_settings['labelFontSize'] = x_axis_label_font_size
+        x_axis_settings["labelFontSize"] = x_axis_label_font_size
 
         # Customize the offset value for the x axis
         x_axis_offset = st.slider(
-            "X Axis Offset (offset to diplace the axis from the edge)", min_value=0, max_value=20, value=0, step=1
+            "X Axis Offset (offset to diplace the axis from the edge)",
+            min_value=0,
+            max_value=20,
+            value=0,
+            step=1,
         )
-        x_axis_settings['offset'] = x_axis_offset
+        x_axis_settings["offset"] = x_axis_offset
 
         # Customize x axis grid color
         x_axis_tick_color = st.color_picker("X Axis Tick Color")
-        x_axis_settings['tickColor'] = x_axis_tick_color
+        x_axis_settings["tickColor"] = x_axis_tick_color
 
         # Customize x axis width
         x_axis_tick_width = st.slider(
             "X Axis Tick Size", min_value=0, max_value=30, value=2, step=1
         )
-        x_axis_settings['tickSize'] = x_axis_tick_width
-        
+        x_axis_settings["tickSize"] = x_axis_tick_width
+
         return x_axis_settings
 
     # Do not cache this funciton unless you want an error.
@@ -222,34 +265,38 @@ class customSidebar():
         # Checkbox to turn off labels and grid
         y_axis_labels_grids_off = st.checkbox("Hide Y-Axis Labels and Grids")
         if y_axis_labels_grids_off:
-            y_axis_settings['grid'] = False
-            y_axis_settings['labels'] = False
-            y_axis_settings['ticks'] = False
-        
+            y_axis_settings["grid"] = False
+            y_axis_settings["labels"] = False
+            y_axis_settings["ticks"] = False
+
         # Customize x axis label color and add add value to x axis settings
         y_axis_label_color = st.color_picker("Y Axis Label Color")
-        y_axis_settings['labelColor'] = y_axis_label_color
+        y_axis_settings["labelColor"] = y_axis_label_color
 
         # Customize x axis label color and add add value to y axis settings
         y_axis_label_font_size = st.slider(
             "Y Axis Label Font Size", min_value=6, max_value=20, value=8, step=1
         )
-        y_axis_settings['labelFontSize'] = y_axis_label_font_size
+        y_axis_settings["labelFontSize"] = y_axis_label_font_size
 
         # Customize the offset value for the x axis
         y_axis_offset = st.slider(
-            "Y Axis Offset (offset to diplace the axis from the edge)", min_value=0, max_value=20, value=0, step=1
+            "Y Axis Offset (offset to diplace the axis from the edge)",
+            min_value=0,
+            max_value=20,
+            value=0,
+            step=1,
         )
-        y_axis_settings['offset'] = y_axis_offset
+        y_axis_settings["offset"] = y_axis_offset
 
         # Customize x axis grid color
         y_axis_tick_color = st.color_picker("Y Axis Tick Color")
-        y_axis_settings['tickColor'] = y_axis_tick_color
+        y_axis_settings["tickColor"] = y_axis_tick_color
 
         # Customize x axis width
         y_axis_tick_width = st.slider(
             "Y Axis Tick Size", min_value=0, max_value=30, value=2, step=1
         )
-        y_axis_settings['tickSize'] = y_axis_tick_width
-        
+        y_axis_settings["tickSize"] = y_axis_tick_width
+
         return y_axis_settings

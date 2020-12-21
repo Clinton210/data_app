@@ -1,13 +1,12 @@
-
 import altair as alt
 import streamlit as st
-from pages.multi_variable_graphs.mvg_helper_fxs import (add_graph_encodings,
-                                                        add_group_var_column,
-                                                        add_x_column,
-                                                        add_y_column,
-                                                        update_graph_type)
-
-
+from pages.multi_variable_graphs.mvg_helper_fxs import (
+    add_graph_encodings,
+    add_group_var_column,
+    add_x_column,
+    add_y_column,
+    update_graph_type,
+)
 from pages.sidebar.sidebar import customSidebar
 
 
@@ -17,22 +16,36 @@ def multi_variable_graphs_main(df):
     graph_types = ["None", "Bar Chart", "Line Chart", "Scatter Chart"]
 
     # creating varaible to hold arguments I would like to display for the mvg sidebar
-    sidebar_args = ['adjust_size', 'adjust_color', 'custom_title', 'custom_title_settings', 'custom_x_axis', 'custom_x_axis_title', 'custom_y_axis', 'custom_y_axis_title', 'tooltips', 'interactive', 'remove_grid']
+    sidebar_args = [
+        "adjust_size",
+        "adjust_color",
+        "custom_title",
+        "custom_title_settings",
+        "custom_x_axis",
+        "custom_x_axis_title",
+        "custom_y_axis",
+        "custom_y_axis_title",
+        "tooltips",
+        "interactive",
+        "remove_grid",
+    ]
 
     # instantiate customSidebar class to create a unique sidebar for the multi_variable_graphs (mvg) page
-    mvg_sidebar = customSidebar(*sidebar_args, graph_types = graph_types)
+    mvg_sidebar = customSidebar(*sidebar_args, graph_types=graph_types)
 
     axis_type = ["Undefined", "Quantitative", "Ordinal", "Temporal", "Geojson"]
     agg_type = ["None", "Average", "Median", "Sum"]
 
     if df.empty:
-        st.info("Use the file uploader to import a csv or excel data file to get started.")
+        st.info(
+            "Use the file uploader to import a csv or excel data file to get started."
+        )
     else:
         # create a list to hold all the column names
         columns = list(df.columns)
 
-        # insert a "None" to the beggining, which will be the default choice. 
-        # They will need to select columns before a graph will generate. 
+        # insert a "None" to the beggining, which will be the default choice.
+        # They will need to select columns before a graph will generate.
         # This will prevent columns being selected as default that are hard to graph
         columns.insert(0, "None")
 
@@ -55,12 +68,15 @@ def multi_variable_graphs_main(df):
             ## Create and print chart ##
             ############################
 
-            
             if x_axis == "None" or y_axis == "None":
                 st.error("Select an X-Axis and Y-Axis to create a chart.")
             else:
                 # add dataframe and title to chart
-                c = alt.Chart(df, title=mvg_sidebar.title) if mvg_sidebar.title != "None" else alt.Chart(df)
+                c = (
+                    alt.Chart(df, title=mvg_sidebar.title)
+                    if mvg_sidebar.title != "None"
+                    else alt.Chart(df)
+                )
 
                 # Depending on type of chart, change the type of mark function and title of the graph
                 c = update_graph_type(c, mvg_sidebar.graph_type_chosen, df)
@@ -78,9 +94,16 @@ def multi_variable_graphs_main(df):
                 )
 
                 # Change axis labels if supplied. Kind of pain to do it other ways.
-                if mvg_sidebar.custom_x_axis_title and mvg_sidebar.x_axis_title != 'Default':
+                if (
+                    mvg_sidebar.custom_x_axis_title
+                    and mvg_sidebar.x_axis_title != "Default"
+                ):
                     c.encoding.x.title = mvg_sidebar.x_axis_title
-                if mvg_sidebar.custom_y_axis_title and mvg_sidebar.y_axis_title != 'Default':
+                    
+                if (
+                    mvg_sidebar.custom_y_axis_title
+                    and mvg_sidebar.y_axis_title != "Default"
+                ):
                     c.encoding.y.title = mvg_sidebar.y_axis_title
 
                 # Update various chart settings
@@ -108,6 +131,6 @@ def multi_variable_graphs_main(df):
                     if mvg_sidebar.adjust_size:
                         st.altair_chart(c)
                     else:
-                        st.altair_chart(c, use_container_width = True)
+                        st.altair_chart(c, use_container_width=True)
                 except Exception as e:
                     st.error(e)
