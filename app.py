@@ -33,11 +33,12 @@ class MainApp:
             self.df = self.convert_to_df(data_file)
             if not self.df.empty:
                 st.dataframe(self.df)
-            else:
-                st.info(
-                    "Use the file uploader to import a csv or excel data file to get started."
-                )
-                self.df = pd.DataFrame()
+        
+        if self.df.empty:
+            st.info(
+                "Use the file uploader to import a csv or excel data file to get started."
+            )
+            self.df = pd.DataFrame()
 
         menu = ["Home", "Multi-Variable Graphs", "About"]
         menu_choice = st.sidebar.selectbox("Menu", menu)

@@ -1,12 +1,11 @@
 import altair as alt
 import streamlit as st
 from pages.multi_variable_graphs.mvg_helper_fxs import (
-    add_graph_encodings,
-    add_group_var_column,
+    create_and_print_chart,
     add_x_column,
     add_y_column,
-    update_graph_type,
-)
+    add_group_var_column,
+    )
 from pages.sidebar.sidebar import customSidebar
 
 
@@ -36,11 +35,7 @@ def multi_variable_graphs_main(df):
     axis_type = ["Undefined", "Quantitative", "Ordinal", "Temporal", "Geojson"]
     agg_type = ["None", "Average", "Median", "Sum"]
 
-    if df.empty:
-        st.info(
-            "Use the file uploader to import a csv or excel data file to get started."
-        )
-    else:
+    if not df.empty:
         # create a list to hold all the column names
         columns = list(df.columns)
 
@@ -64,73 +59,7 @@ def multi_variable_graphs_main(df):
                 # Add a None option to the column list since grouping varaible is optional
                 group_var, group_var_options = add_group_var_column(columns, axis_type)
 
-            ############################
-            ## Create and print chart ##
-            ############################
-
             if x_axis == "None" or y_axis == "None":
-                st.error("Select an X-Axis and Y-Axis to create a chart.")
-            else:
-                # add dataframe and title to chart
-                c = (
-                    alt.Chart(df, title=mvg_sidebar.title)
-                    if mvg_sidebar.title != "None"
-                    else alt.Chart(df)
-                )
-
-                # Depending on type of chart, change the type of mark function and title of the graph
-                c = update_graph_type(c, mvg_sidebar.graph_type_chosen, df)
-
-                # Add the encodings of x axis, y axis, and grouping variable
-                c = add_graph_encodings(
-                    c,
-                    x_axis,
-                    x_options,
-                    y_axis,
-                    y_options,
-                    group_var,
-                    group_var_options,
-                    mvg_sidebar.tooltips,
-                )
-
-                # Change axis labels if supplied. Kind of pain to do it other ways.
-                if (
-                    mvg_sidebar.custom_x_axis_title
-                    and mvg_sidebar.x_axis_title != "Default"
-                ):
-                    c.encoding.x.title = mvg_sidebar.x_axis_title
-                    
-                if (
-                    mvg_sidebar.custom_y_axis_title
-                    and mvg_sidebar.y_axis_title != "Default"
-                ):
-                    c.encoding.y.title = mvg_sidebar.y_axis_title
-
-                # Update various chart settings
-                if mvg_sidebar.custom_title_settings:
-                    c = c.configure_title(**mvg_sidebar.title_settings)
-                if mvg_sidebar.custom_x_axis_title:
-                    c = c.configure_axisX(**mvg_sidebar.x_axis_title_settings)
-                if mvg_sidebar.custom_x_axis:
-                    c = c.configure_axisX(**mvg_sidebar.x_axis_settings)
-                if mvg_sidebar.custom_y_axis_title:
-                    c = c.configure_axisY(**mvg_sidebar.y_axis_title_settings)
-                if mvg_sidebar.custom_y_axis:
-                    c = c.configure_axisY(**mvg_sidebar.y_axis_settings)
-                if mvg_sidebar.interactive:
-                    c = c.interactive()
-                if mvg_sidebar.remove_grid:
-                    c = c.configure_axis(grid=False)
-                if mvg_sidebar.adjust_size:
-                    c = c.properties(**mvg_sidebar.size_settings)
-                if mvg_sidebar.color_settings:
-                    c = c.configure_mark(**mvg_sidebar.color_settings)
-
-                # Create Graph
-                try:
-                    if mvg_sidebar.adjust_size:
-                        st.altair_chart(c)
-                    else:
-                        st.altair_chart(c, use_container_width=True)
-                except Exception as e:
-                    st.error(e)
+                st.info("Select an X-Axis and Y-Axis to create a chart.")
+            else: ## Create and print chart ##
+                create_and_print_chart(x_axis, y_axis, mvg_sidebar, df, x_options, y_options, group_var, group_var_options)

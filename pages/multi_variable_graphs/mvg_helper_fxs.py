@@ -3,6 +3,50 @@ import pandas as pd
 import streamlit as st
 
 
+######################################################
+######### CREATE AND PRINT CHART MAIN FUNCTION #########
+######################################################
+
+def create_and_print_chart(x_axis, y_axis, mvg_sidebar, df, x_options, y_options, group_var, group_var_options):
+
+    # add dataframe and title to chart
+    c = (
+        alt.Chart(df, title=mvg_sidebar.title)
+        if mvg_sidebar.title != "None"
+        else alt.Chart(df)
+    )
+
+    # Depending on type of chart, change the type of mark function and title of the graph
+    c = update_graph_type(c, mvg_sidebar.graph_type_chosen, df)
+
+    # Add the encodings of x axis, y axis, and grouping variable
+    c = add_multi_variable_graph_encodings(
+        c,
+        x_axis,
+        x_options,
+        y_axis,
+        y_options,
+        group_var,
+        group_var_options,
+        mvg_sidebar.tooltips,
+    )
+
+    # Change axis labels if supplied. Kind of pain to do it other ways.
+    c = update_axis_titles(mvg_sidebar, c)
+
+    # Update various chart settings
+    c = update_various_graph_settings(mvg_sidebar, c)
+
+    # Create Graph
+    try:
+        if mvg_sidebar.adjust_size:
+            st.altair_chart(c)
+        else:
+            st.altair_chart(c, use_container_width=True)
+    except Exception as e:
+        st.error(e)
+
+
 # Following three funcitons update the x, y, and group variable columns in the home page
 # Do not cache this funciton unless you want an error.
 def add_x_column(columns, axis_type, agg_type):
@@ -51,7 +95,7 @@ def add_y_column(columns, axis_type, agg_type):
 
 # Do not cache this funciton unless you want an error.
 def add_group_var_column(columns, axis_type):
-    # Add a None option to the column list since grouping varaible is optional
+    
     group_var = st.selectbox("Grouping Variable (optional)", columns)
 
     # Remove group_var column selected from column list unless it is None
@@ -82,7 +126,7 @@ def update_graph_type(c, graph_type_chosen, df):
 
 
 # Do not cache this funciton unless you want an error.
-def add_graph_encodings(
+def add_multi_variable_graph_encodings(
     c, x_axis, x_options, y_axis, y_options, group_var, group_var_options, tooltips
 ):
 
@@ -112,5 +156,43 @@ def add_graph_encodings(
             c = c.encode(*encode_options, **tooltip_options)
     else:
         c = c.encode(*encode_options)
+
+    return c
+
+def update_various_graph_settings(mvg_sidebar, c):
+    # Update various chart settings
+    if mvg_sidebar.custom_title_settings:
+        c = c.configure_title(**mvg_sidebar.title_settings)
+    if mvg_sidebar.custom_x_axis_title:
+        c = c.configure_axisX(**mvg_sidebar.x_axis_title_settings)
+    if mvg_sidebar.custom_x_axis or mvg_sidebar.x_axis_title_off:
+        c = c.configure_axisX(**mvg_sidebar.x_axis_settings)
+    if mvg_sidebar.custom_y_axis_title:
+        c = c.configure_axisY(**mvg_sidebar.y_axis_title_settings)
+    if mvg_sidebar.custom_y_axis or mvg_sidebar.y_axis_title_off:
+        c = c.configure_axisY(**mvg_sidebar.y_axis_settings)
+    if mvg_sidebar.interactive:
+        c = c.interactive()
+    if mvg_sidebar.remove_grid:
+        c = c.configure_axis(grid=False)
+    if mvg_sidebar.adjust_size:
+        c = c.properties(**mvg_sidebar.size_settings)
+    if mvg_sidebar.color_settings:
+        c = c.configure_mark(**mvg_sidebar.color_settings)
+    return c
+
+def update_axis_titles(mvg_sidebar, c):
+    # Change axis labels if supplied. Kind of pain to do it other ways.
+    if (
+        mvg_sidebar.custom_x_axis_title
+        and mvg_sidebar.x_axis_title != "Default"
+    ):
+        c.encoding.x.title = mvg_sidebar.x_axis_title
+
+    if (
+        mvg_sidebar.custom_y_axis_title
+        and mvg_sidebar.y_axis_title != "Default"
+    ):
+        c.encoding.y.title = mvg_sidebar.y_axis_title
 
     return c
