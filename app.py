@@ -1,11 +1,11 @@
 # Core Pkgs
+import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as stc
-import pandas as pd
 
 from pages.about_page import about_main
-
-from pages.multi_variable_graphs.multi_variable_graphs import multi_variable_graphs_main
+from pages.multi_variable_graphs.multi_variable_graphs import \
+    multi_variable_graphs_main
 
 HTML_BANNER = """
     <div style="background-color:whitesmoke;padding:10px;border-radius:10px">
@@ -14,10 +14,6 @@ HTML_BANNER = """
     """
 
 class MainApp():
-
-    # Create class dataframe that can be shared among all modules
-    
-    
 
     def __init__(self):
         """ Main programm"""
@@ -39,14 +35,10 @@ class MainApp():
             else:
                 st.info("Use the file uploader to import a csv or excel data file to get started.")
                 self.df = pd.DataFrame()
-
-        
         
         menu = ["Home", "Multi-Variable Graphs", "About"]
         menu_choice = st.sidebar.selectbox("Menu", menu)
 
-
-    
         if menu_choice == "Multi-Variable Graphs":
             multi_variable_graphs_main(self.df) 
 

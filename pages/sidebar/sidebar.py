@@ -1,6 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as stc
 
+
 class customSidebar():
     """class to create sidebar options other than the nav menu
     Pass in the setting to display to the constructor as args along with 
