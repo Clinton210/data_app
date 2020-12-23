@@ -4,7 +4,7 @@ import streamlit as st
 import streamlit.components.v1 as stc
 
 from pages.about_page import about_main
-from pages.multi_variable_graphs.multi_variable_graphs import multi_variable_graphs_main
+from pages.graph_pages import graphPages
 
 HTML_BANNER = """
     <div style="background-color:whitesmoke;padding:10px;border-radius:10px">
@@ -44,7 +44,8 @@ class MainApp:
         menu_choice = st.sidebar.selectbox("Menu", menu)
 
         if menu_choice == "Multi-Variable Graphs":
-            multi_variable_graphs_main(self.df)
+            graph_pages = graphPages(self.df)
+            graph_pages.multi_variable_graphs_main()
 
         if menu_choice == "About":
             about_main()

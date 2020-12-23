@@ -31,7 +31,7 @@ def create_and_print_chart(x_axis, y_axis, mvg_sidebar, df, x_options, y_options
         mvg_sidebar.tooltips,
     )
 
-    # Change axis labels if supplied. Kind of pain to do it other ways.
+    # Change axis labels if supplied.
     c = update_axis_titles(mvg_sidebar, c)
 
     # Update various chart settings
@@ -47,8 +47,8 @@ def create_and_print_chart(x_axis, y_axis, mvg_sidebar, df, x_options, y_options
         st.error(e)
 
 
-# Following three funcitons update the x, y, and group variable columns in the home page
-# Do not cache this funciton unless you want an error.
+# Following three fuctions update the x, y, and group variable columns
+# Do not cache this fuction unless you want an error.
 def add_x_column(columns, axis_type, agg_type):
     x_axis = st.selectbox("X Axis", columns)
 
@@ -70,7 +70,7 @@ def add_x_column(columns, axis_type, agg_type):
     return x_axis, x_options
 
 
-# Do not cache this funciton unless you want an error.
+# Do not cache this fuction unless you want an error.
 def add_y_column(columns, axis_type, agg_type):
     # columns.insert(0, "Count of X-axis")
     y_axis = st.selectbox("Y Axis", columns)
@@ -93,7 +93,7 @@ def add_y_column(columns, axis_type, agg_type):
     return y_axis, y_options
 
 
-# Do not cache this funciton unless you want an error.
+# Do not cache this fuction unless you want an error.
 def add_group_var_column(columns, axis_type):
     
     group_var = st.selectbox("Grouping Variable (optional)", columns)
@@ -114,7 +114,7 @@ def add_group_var_column(columns, axis_type):
 
 
 # These functions update the graph settings
-# Do not cache this funciton unless you want an error.
+# Do not cache this fuction unless you want an error.
 def update_graph_type(c, graph_type_chosen, df):
     if graph_type_chosen == "Bar Chart":
         c = c.mark_bar()
@@ -125,7 +125,7 @@ def update_graph_type(c, graph_type_chosen, df):
     return c
 
 
-# Do not cache this funciton unless you want an error.
+# Do not cache this fuction unless you want an error.
 def add_multi_variable_graph_encodings(
     c, x_axis, x_options, y_axis, y_options, group_var, group_var_options, tooltips
 ):

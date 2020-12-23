@@ -80,7 +80,7 @@ class customSidebar:
             self.custom_x_axis_title = False
             
 
-        # Checkbox to turn off y-axis ttile
+        # Checkbox to turn off y-axis title
         self.y_axis_title_off = st.sidebar.checkbox("Hide Y-Axis Title") if 'custom_y_axis_title' in args else False
         if self.y_axis_title_off:
             self.y_axis_settings["title"] = None
@@ -124,10 +124,10 @@ class customSidebar:
                         self.title_settings
                     )
 
-        # Customize x axis settings.
-        if ("custom_x_axis_title" in args or "custom_x_axis" in args) and not((self.x_axis_labels_grids_off) and (self.x_axis_title_off)):
+        # Customize x axis settings. Make sure that both the x axis labels and title are not turned off. If both are turned off, there is no reason to diplay X axis settings at all.
+        if ("custom_x_axis_title" in args or "custom_x_axis" in args) and not self._x_axis_lables_and_title_turned_off():
             with st.sidebar.beta_expander("X Axis Settings"):
-                if not self.x_axis_title_off:
+                if not self.x_axis_title_off: # if x axis title turned off, no need to display the custom x axis title options
                     self.custom_x_axis_title = (
                         st.checkbox("Customize X Axis Title")
                         if "custom_x_axis_title" in args
@@ -141,7 +141,7 @@ class customSidebar:
                         ) = self._display_x_axis_title_settings(
                             self.x_axis_settings
                         )  # Check if I need to pass in this variable
-                if not self.x_axis_labels_grids_off:
+                if not self.x_axis_labels_grids_off: # if x axis labels turned off, no need to display the custom x axis labels options
                     self.custom_x_axis = (
                         st.checkbox("Customize X Axis") if "custom_x_axis" in args else None
                     )
@@ -151,10 +151,10 @@ class customSidebar:
                         )  # Check if I need to pass in this variable
                         self.x_axis_settings.update(returned_x_axis_settings)
 
-        # Customize y axis settings.
-        if (("custom_y_axis_title" in args) or ("custom_y_axis" in args)) and not((self.y_axis_labels_grids_off) and (self.y_axis_title_off)):
+        # Customize y axis settings. Make sure that both the y axis labels and title are not turned off. If both are turned off, there is no reason to diplay Y axis settings at all.
+        if (("custom_y_axis_title" in args) or ("custom_y_axis" in args)) and not self._y_axis_lables_and_title_turned_off():
             with st.sidebar.beta_expander("Y Axis Settings"):
-                if not self.y_axis_title_off:
+                if not self.y_axis_title_off: # if y axis title turned off, no need to display the custom y axis title options
                     self.custom_y_axis_title = (
                         st.checkbox("Customize Y Axis Title")
                         if "custom_y_axis_title" in args
@@ -168,7 +168,7 @@ class customSidebar:
                         ) = self._display_y_axis_title_settings(
                             self.y_axis_settings
                         )  # Check if I need to pass in this variable
-                if not self.y_axis_labels_grids_off:
+                if not self.y_axis_labels_grids_off: # if y axis labels turned off, no need to display the custom y axis labels options
                     self.custom_y_axis = (
                         st.checkbox("Customize Y Axis") if "custom_y_axis" in args else None
                     )
@@ -323,3 +323,9 @@ class customSidebar:
         y_axis_settings["tickSize"] = y_axis_tick_width
 
         return y_axis_settings
+
+    def _x_axis_lables_and_title_turned_off(self):
+        return True if self.x_axis_labels_grids_off and self.x_axis_title_off else False
+
+    def _y_axis_lables_and_title_turned_off(self):
+        return True if self.y_axis_labels_grids_off and self.y_axis_title_off else False
