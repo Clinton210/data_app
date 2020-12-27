@@ -1,13 +1,21 @@
 import altair as alt
-import pandas as pd
 import streamlit as st
 
+#####################################################
+######### HELPER FUNCTIONS FOR GRAPH PAGES ##########
+#####################################################
 
-######################################################
-######### CREATE AND PRINT CHART MAIN FUNCTION #########
-######################################################
-
-def create_and_print_chart(x_axis, y_axis, mvg_sidebar, df, x_options, y_options, group_var, group_var_options):
+# two methods below create and print the altair chart
+def create_chart(
+    x_axis,
+    y_axis,
+    mvg_sidebar,
+    df,
+    x_options,
+    y_options,
+    group_var,
+    group_var_options,
+):
 
     # add dataframe and title to chart
     c = (
@@ -38,6 +46,11 @@ def create_and_print_chart(x_axis, y_axis, mvg_sidebar, df, x_options, y_options
     c = update_various_graph_settings(mvg_sidebar, c)
 
     # Create Graph
+
+    return c
+
+def print_chart(mvg_sidebar, c):
+    # Create Graph
     try:
         if mvg_sidebar.adjust_size:
             st.altair_chart(c)
@@ -45,7 +58,6 @@ def create_and_print_chart(x_axis, y_axis, mvg_sidebar, df, x_options, y_options
             st.altair_chart(c, use_container_width=True)
     except Exception as e:
         st.error(e)
-
 
 # Following three fuctions update the x, y, and group variable columns
 # Do not cache this fuction unless you want an error.
@@ -69,7 +81,6 @@ def add_x_column(columns, axis_type, agg_type):
 
     return x_axis, x_options
 
-
 # Do not cache this fuction unless you want an error.
 def add_y_column(columns, axis_type, agg_type):
     # columns.insert(0, "Count of X-axis")
@@ -92,10 +103,9 @@ def add_y_column(columns, axis_type, agg_type):
 
     return y_axis, y_options
 
-
 # Do not cache this fuction unless you want an error.
 def add_group_var_column(columns, axis_type):
-    
+
     group_var = st.selectbox("Grouping Variable (optional)", columns)
 
     # Remove group_var column selected from column list unless it is None
@@ -112,8 +122,7 @@ def add_group_var_column(columns, axis_type):
 
     return group_var, group_var_options
 
-
-# These functions update the graph settings
+# Following methods update the graph settings
 # Do not cache this fuction unless you want an error.
 def update_graph_type(c, graph_type_chosen, df):
     if graph_type_chosen == "Bar Chart":
@@ -124,10 +133,16 @@ def update_graph_type(c, graph_type_chosen, df):
         c = c.mark_circle()
     return c
 
-
 # Do not cache this fuction unless you want an error.
 def add_multi_variable_graph_encodings(
-    c, x_axis, x_options, y_axis, y_options, group_var, group_var_options, tooltips
+    c,
+    x_axis,
+    x_options,
+    y_axis,
+    y_options,
+    group_var,
+    group_var_options,
+    tooltips,
 ):
 
     # Create an x and y encoding thats will be passed to altairs encode function
@@ -183,16 +198,10 @@ def update_various_graph_settings(mvg_sidebar, c):
 
 def update_axis_titles(mvg_sidebar, c):
     # Change axis labels if supplied. Kind of pain to do it other ways.
-    if (
-        mvg_sidebar.custom_x_axis_title
-        and mvg_sidebar.x_axis_title != "Default"
-    ):
+    if mvg_sidebar.custom_x_axis_title and mvg_sidebar.x_axis_title != "Default":
         c.encoding.x.title = mvg_sidebar.x_axis_title
 
-    if (
-        mvg_sidebar.custom_y_axis_title
-        and mvg_sidebar.y_axis_title != "Default"
-    ):
+    if mvg_sidebar.custom_y_axis_title and mvg_sidebar.y_axis_title != "Default":
         c.encoding.y.title = mvg_sidebar.y_axis_title
 
     return c
