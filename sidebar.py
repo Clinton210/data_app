@@ -159,7 +159,7 @@ class customSidebar:
                             self.x_axis_title_settings,
                         ) = self._display_x_axis_title_settings(
                             self.x_axis_settings
-                        )  # Check if I need to pass in this variable
+                        ) 
                 if (
                     not self.x_axis_labels_grids_off
                 ):  # if x axis labels turned off, no need to display the custom x axis labels options
@@ -171,7 +171,7 @@ class customSidebar:
                     if self.custom_x_axis:
                         returned_x_axis_settings = self._display_x_axis_settings(
                             self.x_axis_settings
-                        )  # Check if I need to pass in this variable
+                        ) 
                         self.x_axis_settings.update(returned_x_axis_settings)
 
         # Customize y axis settings. Make sure that both the y axis labels and title are not turned off. If both are turned off, there is no reason to diplay Y axis settings at all.
@@ -194,7 +194,7 @@ class customSidebar:
                             self.y_axis_title_settings,
                         ) = self._display_y_axis_title_settings(
                             self.y_axis_settings
-                        )  # Check if I need to pass in this variable
+                        ) 
                 if (
                     not self.y_axis_labels_grids_off
                 ):  # if y axis labels turned off, no need to display the custom y axis labels options
@@ -206,7 +206,7 @@ class customSidebar:
                     if self.custom_y_axis:
                         returned_y_axis_settings = self._display_y_axis_settings(
                             self.y_axis_settings
-                        )  # Check if I need to pass in this variable
+                        ) 
                         self.y_axis_settings.update(returned_y_axis_settings)
 
     # Methods
@@ -233,7 +233,7 @@ class customSidebar:
     def _display_title_settings(self, title_settings):
         # Customize font size and add value to title settings
         title_font_size = st.slider(
-            "Font Size", min_value=10, max_value=60, value=10, step=1
+            "Font Size", min_value=10, max_value=60, value=14, step=1
         )
         title_settings["fontSize"] = title_font_size
 
@@ -244,6 +244,10 @@ class customSidebar:
             "Title Position", ["Start", "Middle", "End"], index=1
         )
         title_settings["anchor"] = title_anchor.lower()
+        title_offset = st.slider(
+            "Title Offset", min_value=0, max_value=40, value=5, step=1
+        )
+        title_settings['offset'] = title_offset
 
         return title_settings
 
