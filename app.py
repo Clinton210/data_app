@@ -32,7 +32,7 @@ class MainApp:
             - Choose either single variable or multi varaible graphs from the menu to the left.
             - Once that is selected, select a graph type.
             - Choose the columns that you would like graphed along with any additional settings.
-            - Tip: click the - icon on the file uploader to close it and save screen space.
+            - Tip: After a data file is uploaded, click the - icon on the file uploader to close it and save screen space.
             """
             )
 

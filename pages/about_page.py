@@ -14,5 +14,5 @@ def about_main():
         )
     with st.beta_expander("Source Files"):
         st.markdown("[GitHub Page](https://github.com/Clinton210/data_app)")
-    with st.beta_expander("Developer: Clinton Potter"):
-        st.markdown("[LinkedIn](https://www.linkedin.com/in/clinton-potter-75487944/)")
+    with st.beta_expander("Developer"):
+        st.markdown("Clinton Potter: [LinkedIn](https://www.linkedin.com/in/clinton-potter-75487944/)")
