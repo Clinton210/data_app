@@ -25,6 +25,17 @@ class MainApp:
 
         stc.html(HTML_BANNER)
 
+        with st.beta_expander("Instructions"):
+            st.markdown(
+                """
+            - Use the file uploader to add a CSV or Excel data file.
+            - Choose either single variable or multi varaible graphs from the menu to the left.
+            - Once that is selected, select a graph type.
+            - Choose the columns that you would like graphed along with any additional settings.
+            - Tip: click the - icon on the file uploader to close it and save screen space.
+            """
+            )
+
         with st.beta_expander("File Uploader"):
 
             data_file = st.file_uploader(
@@ -33,15 +44,19 @@ class MainApp:
             self.df = self.convert_to_df(data_file)
             if not self.df.empty:
                 st.dataframe(self.df)
-        
+
         if self.df.empty:
             st.info(
                 "Use the file uploader to import a csv or excel data file to get started."
             )
             self.df = pd.DataFrame()
 
-        menu = ["Home", "Multi-Variable Graphs", "About"]
+        menu = ["Home", "Single-Variable Graphs", "Multi-Variable Graphs", "About"]
         menu_choice = st.sidebar.selectbox("Menu", menu)
+
+        if menu_choice == "Single-Variable Graphs":
+            graph_pages = graphPages(self.df)
+            graph_pages.single_variable_graphs_main()
 
         if menu_choice == "Multi-Variable Graphs":
             graph_pages = graphPages(self.df)

@@ -49,6 +49,7 @@ def create_chart(
 
     return c
 
+
 def print_chart(mvg_sidebar, c):
     # Create Graph
     try:
@@ -58,6 +59,7 @@ def print_chart(mvg_sidebar, c):
             st.altair_chart(c, use_container_width=True)
     except Exception as e:
         st.error(e)
+
 
 # Following three fuctions update the x, y, and group variable columns
 # Do not cache this fuction unless you want an error.
@@ -69,7 +71,9 @@ def add_x_column(columns, axis_type, agg_type):
         columns.remove(x_axis)
 
     x_axis_type = st.selectbox("X Axis Type", axis_type)
-    x_axis_agg = st.selectbox("X Aggregate Type", agg_type)
+
+    # Check if agg_type is not blank. If it is, then skip. Otherwise ask for agg type.
+    x_axis_agg = st.selectbox("X Aggregate Type", agg_type) if agg_type else "None"
 
     # save x options in dict
     x_options = {}
@@ -80,6 +84,7 @@ def add_x_column(columns, axis_type, agg_type):
         x_options["aggregate"] = x_axis_agg.lower()
 
     return x_axis, x_options
+
 
 # Do not cache this fuction unless you want an error.
 def add_y_column(columns, axis_type, agg_type):
@@ -103,6 +108,7 @@ def add_y_column(columns, axis_type, agg_type):
 
     return y_axis, y_options
 
+
 # Do not cache this fuction unless you want an error.
 def add_group_var_column(columns, axis_type):
 
@@ -122,16 +128,21 @@ def add_group_var_column(columns, axis_type):
 
     return group_var, group_var_options
 
+
 # Following methods update the graph settings
 # Do not cache this fuction unless you want an error.
 def update_graph_type(c, graph_type_chosen, df):
     if graph_type_chosen == "Bar Chart":
         c = c.mark_bar()
-    if graph_type_chosen == "Line Chart":
+    elif graph_type_chosen == "Line Chart":
         c = c.mark_line()
-    if graph_type_chosen == "Scatter Chart":
+    elif graph_type_chosen == "Scatter Chart":
         c = c.mark_circle()
+    elif graph_type_chosen == "Histogram":
+        c = c.mark_bar()
+
     return c
+
 
 # Do not cache this fuction unless you want an error.
 def add_multi_variable_graph_encodings(
@@ -174,6 +185,7 @@ def add_multi_variable_graph_encodings(
 
     return c
 
+
 def update_various_graph_settings(mvg_sidebar, c):
     # Update various chart settings
     if mvg_sidebar.custom_title_settings:
@@ -195,6 +207,7 @@ def update_various_graph_settings(mvg_sidebar, c):
     if mvg_sidebar.color_settings:
         c = c.configure_mark(**mvg_sidebar.color_settings)
     return c
+
 
 def update_axis_titles(mvg_sidebar, c):
     # Change axis labels if supplied. Kind of pain to do it other ways.
